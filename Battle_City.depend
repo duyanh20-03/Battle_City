@@ -1,0 +1,46 @@
+# depslib dependency file v1.0
+1760384255 source:c:\users\admin\onedrive\battle_city\game.cpp
+	"Game.h"
+	"Constant.h"
+
+1760378385 source:c:\users\admin\onedrive\battle_city\main.cpp
+	"Game.h"
+
+1760376171 source:c:\users\admin\onedrive\battle_city\player.cpp
+
+1760382943 c:\users\admin\onedrive\battle_city\game.h
+	<SDL.h>
+	<SDL_image.h>
+	<iostream>
+	<vector>
+	<algorithm>
+	"Wall.h"
+
+1760376538 c:\users\admin\onedrive\battle_city\constant.h
+
+1760380335 source:c:\users\admin\onedrive\battle_city\resources.cpp
+	"Resources.h"
+
+1760380335 c:\users\admin\onedrive\battle_city\resources.h
+	<SDL.h>
+	<SDL_image.h>
+	<SDL_mixer.h>
+	<SDL_ttf.h>
+	<string>
+	<iostream>
+
+1760384167 source:c:\users\admin\onedrive\battle_city\wall.cpp
+	"Wall.h"
+	"Constant.h"
+	<SDL_image.h>
+
+1760382849 c:\users\admin\onedrive\battle_city\wall..h
+	<SDL.h>
+	<iostream>
+	<vector>
+
+1760384154 c:\users\admin\onedrive\battle_city\wall.h
+	<SDL.h>
+	<iostream>
+	<vector>
+
