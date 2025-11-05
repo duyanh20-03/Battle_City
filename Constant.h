@@ -6,5 +6,7 @@ const int SCREEN_HEIGHT = 600;
 const int TILE_SIZE = 40;
 const int MAP_WIDTH = SCREEN_WIDTH / TILE_SIZE; // 20
 const int MAP_HEIGHT = SCREEN_HEIGHT / TILE_SIZE; // 15
+const int FPS = 60;
+const int frameDelay = 500 / FPS;
 
 #endif // CONSTANT_H_INCLUDED

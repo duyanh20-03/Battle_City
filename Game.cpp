@@ -1,3 +1,4 @@
+#include<SDL.h>
 #include "Game.h"
 #include "Constant.h"
 
@@ -34,6 +35,9 @@ Game::Game() {
 
     running = true;
     generateWalls();
+    spawnEnemies();
+    player = Player( TILE_SIZE, (MAP_HEIGHT - 2) * TILE_SIZE,renderer);
+
 }
 
 void Game::generateWalls() {
@@ -61,18 +65,143 @@ void Game::render() {
         wall.render(renderer);
     }
 
+    player.render(renderer);
+    for (auto& enemy : enemies) {
+        enemy.render(renderer);
+    }
+
     SDL_RenderPresent(renderer);
 }
 
+void Game::handleEvents() {
+    SDL_Event event;
+    double angle = 0.0;
+    while (SDL_PollEvent(&event)) {
+        if (event.type == SDL_QUIT) {
+            running = false;
+        }
+        else if (event.type == SDL_KEYDOWN) {
+            std::cout << "Pressed: " << SDL_GetKeyName(event.key.keysym.sym) << std::endl;
+            if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_KP_ENTER) {
+                    std::cout << "ENTER DETECTED!\n";
+                player.shoot();
+            }
+        }
+    }
+
+            const Uint8* keystate = SDL_GetKeyboardState(NULL);
+            if (keystate[SDL_SCANCODE_UP]) {
+                player.move(0, -5, walls);
+                player.dirX = 0;
+                player.dirY = -1;
+            }
+            if (keystate[SDL_SCANCODE_DOWN]) {
+                player.move(0, 5, walls);
+                player.dirX = 0;
+                player.dirY = 1;
+            }
+            if (keystate[SDL_SCANCODE_RIGHT]) {
+                player.move(5, 0, walls);
+                player.dirX = 1;
+                player.dirY = 0;
+            }
+            if (keystate[SDL_SCANCODE_LEFT]) {
+                player.move(-5, 0, walls);
+                player.dirX = -1;
+                player.dirY = 0;
+            }
+
+        }
+
+
+void Game::update() {
+    player.updateBullets();
+    for (auto& bullet : player.bullets) {
+        for (auto& wall : walls) {
+            if (wall.active && SDL_HasIntersection(&bullet.rect, &wall.rect)) {
+                wall.active = false;
+                bullet.active = false;
+                break;
+            }
+        }
+    }
+    for(auto& enemy : enemies){
+        enemy.move(walls);
+        enemy.updateBullet();
+        if(rand() % 100 <2){
+            enemy.shoot();
+        }
+    }
+    for(auto& enemy : enemies){
+        for(auto& bullet : enemy.bullets){
+            for(auto& wall : walls){
+                if(wall.active && SDL_HasIntersection(&bullet.rect, &wall.rect)){
+                    wall.active = false;
+                    bullet.active = false;
+                    break;
+                }
+            }
+        }
+    }
+    for(auto& bullet : player.bullets){
+            for(auto& enemy : enemies){
+                if(enemy.active && SDL_HasIntersection(&bullet.rect, &enemy.rect)){
+                    enemy.active = false;
+                    bullet.active = false;
+                    break;
+            }
+        }
+    }
+    enemies.erase(remove_if(enemies.begin(),enemies.end(),[](EnemyTank &e) {return !e.active; }), enemies.end());
+    if(enemies.empty()){
+        running=false;
+    }
+    for(auto& enemy : enemies){
+        for(auto& bullet : enemy.bullets){
+            if(SDL_HasIntersection(&bullet.rect,&player.rect)){
+                running = false;
+                return;
+            }
+        }
+    }
+}
+
+void Game::spawnEnemies() {
+    enemies.clear();
+    for (int i = 0; i < enemyNumber; i++) {
+        int ex,ey;
+        bool validPosition=false;
+        while(!validPosition){
+            ex= (rand() % (MAP_WIDTH-2) +1)*TILE_SIZE;
+            ey=(rand() % (MAP_HEIGHT-2) +1)*TILE_SIZE;
+            validPosition=true;
+            for(const auto& wall:walls){
+                if(wall.active && wall.x==ex && wall.y==ey){
+                    validPosition=false;
+                    break;
+                }
+            }
+        }
+        enemies.push_back(EnemyTank(ex,ey));
+    }
+}
+
+Uint32 frameStart;
 void Game::run() {
     SDL_Event e;
     while (running) {
-        while (SDL_PollEvent(&e)) {
-            if (e.type == SDL_QUIT)
-                running = false;
-        }
 
+
+         handleEvents();
+         update();
         render();
+
+        int frameTime;
+        frameStart = SDL_GetTicks();
+        frameTime = SDL_GetTicks() - frameStart;
+        if (frameDelay > frameTime) {
+            SDL_Delay(frameDelay - frameTime);
+        }
         SDL_Delay(16); // ~60fps
     }
 }

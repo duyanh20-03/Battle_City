@@ -1,22 +1,31 @@
 # depslib dependency file v1.0
-1760384255 source:c:\users\admin\onedrive\battle_city\game.cpp
+1762036291 source:c:\users\admin\onedrive\battle_city\game.cpp
+	<SDL.h>
 	"Game.h"
 	"Constant.h"
 
 1760378385 source:c:\users\admin\onedrive\battle_city\main.cpp
 	"Game.h"
 
-1760376171 source:c:\users\admin\onedrive\battle_city\player.cpp
+1760474634 source:c:\users\admin\onedrive\battle_city\player.cpp
+	"Player.h"
+	"Bullet.h"
+	"Wall.h"
+	"Constant.h"
+	<algorithm>
 
-1760382943 c:\users\admin\onedrive\battle_city\game.h
+1761834999 c:\users\admin\onedrive\battle_city\game.h
 	<SDL.h>
 	<SDL_image.h>
 	<iostream>
 	<vector>
 	<algorithm>
 	"Wall.h"
+	"Player.h"
+	"Bullet.h"
+	"EnemyTank.h"
 
-1760376538 c:\users\admin\onedrive\battle_city\constant.h
+1760468682 c:\users\admin\onedrive\battle_city\constant.h
 
 1760380335 source:c:\users\admin\onedrive\battle_city\resources.cpp
 	"Resources.h"
@@ -43,4 +52,35 @@
 	<SDL.h>
 	<iostream>
 	<vector>
+
+1760472712 source:c:\users\admin\onedrive\battle_city\bullet.cpp
+	"Bullet.h"
+	"Constant.h"
+
+1760469101 c:\users\admin\onedrive\battle_city\bullet.h
+	<SDL.h>
+	<iostream>
+	<vector>
+
+1760470841 c:\users\admin\onedrive\battle_city\player.h
+	<SDL.h>
+	<SDL_image.h>
+	"Wall.h"
+	"Bullet.h"
+	<iostream>
+	<vector>
+
+1761831903 c:\users\admin\onedrive\battle_city\enemytank.h
+	<SDL.h>
+	<vector>
+	<iostream>
+	"Bullet.h"
+	"Wall.h"
+
+1761834931 source:c:\users\admin\onedrive\battle_city\enemytank.cpp
+	"EnemyTank.h"
+	"Bullet.h"
+	"Constant.h"
+	"Wall.h"
+	<algorithm>
 

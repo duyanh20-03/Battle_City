@@ -7,6 +7,9 @@
 #include <vector>
 #include <algorithm>
 #include "Wall.h"
+#include "Player.h"
+#include "Bullet.h"
+#include "EnemyTank.h"
 
 class Game {
     private:
@@ -14,6 +17,9 @@ class Game {
     SDL_Renderer* renderer;
     bool running;
     std::vector<Wall> walls;
+    Player player;
+    int enemyNumber = 10;
+    std::vector<EnemyTank> enemies;
 
     public:
     Game();
@@ -21,7 +27,10 @@ class Game {
 
     void run();
     void render();
+    void handleEvents();
+    void update();
     void generateWalls();
+    void spawnEnemies();
     bool isRunning() const { return running; }
 
 };
