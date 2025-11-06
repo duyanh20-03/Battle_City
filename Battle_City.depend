@@ -1,5 +1,5 @@
 # depslib dependency file v1.0
-1762394465 source:c:\users\admin\onedrive\battle_city\game.cpp
+1762405273 source:c:\users\admin\onedrive\battle_city\game.cpp
 	<SDL.h>
 	<SDL_ttf.h>
 	"Game.h"
@@ -16,7 +16,7 @@
 	"Constant.h"
 	<algorithm>
 
-1762394465 c:\users\admin\onedrive\battle_city\game.h
+1762405256 c:\users\admin\onedrive\battle_city\game.h
 	<SDL.h>
 	<SDL_image.h>
 	<iostream>
@@ -27,6 +27,7 @@
 	"Bullet.h"
 	"EnemyTank.h"
 	"MenuScreen.h"
+	"Win.h"
 
 1760468682 c:\users\admin\onedrive\battle_city\constant.h
 
@@ -65,7 +66,7 @@
 	<iostream>
 	<vector>
 
-1762395691 c:\users\admin\onedrive\battle_city\player.h
+1762402521 c:\users\admin\onedrive\battle_city\player.h
 	<SDL.h>
 	<SDL_image.h>
 	"Wall.h"
@@ -126,5 +127,16 @@
 	<vector>
 	"Wall.h"
 	"EnemyTank.h"
+	"Constant.h"
+
+1762405131 c:\users\admin\onedrive\battle_city\win.h
+	<SDL_image.h>
+	<iostream>
+	<string>
+	<vector>
+	"Button.h"
+
+1762405147 source:c:\users\admin\onedrive\battle_city\win.cpp
+	"Win.h"
 	"Constant.h"
 

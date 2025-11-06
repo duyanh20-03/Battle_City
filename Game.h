@@ -11,16 +11,19 @@
 #include "Bullet.h"
 #include "EnemyTank.h"
 #include "MenuScreen.h"
+#include "Win.h"
 
 class Game {
     private:
     SDL_Window* window;
     SDL_Renderer* renderer;
+    SDL_Texture* hearts[3];
     bool running;
     std::vector<Wall> walls;
     Player player;
     int enemyNumber = 10;
     int currentLevel = 1;
+    int lives = 3;
     std::vector<EnemyTank> enemies;
 
     public:

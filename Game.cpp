@@ -41,6 +41,19 @@ Game::Game() {
         return;
     }
 
+    const char* heartFiles[3] = {"1-Lives.png", "2-Lives.png", "3-Lives.png"};
+    for (int i = 0; i < 3; i++) {
+         SDL_Surface* tempSurface = IMG_Load(heartFiles[i]);
+         if (tempSurface) {
+             hearts[i] = SDL_CreateTextureFromSurface(renderer, tempSurface);
+             SDL_FreeSurface(tempSurface);
+         } else {
+            std::cerr << "Failed to load " << heartFiles[i] << ": " << IMG_GetError() << std::endl;
+            hearts[i] = nullptr;
+    }
+}
+
+
     running = true;
     player.init(renderer);
     //generateWalls();
@@ -79,7 +92,20 @@ void Game::render() {
         enemy.render(renderer);
     }
 
+     if (lives > 0 && lives <= 3) {
+         SDL_Texture* currentHeart = hearts[lives - 1]; // 3 -> hearts[2], 2 -> hearts[1]
+         if (currentHeart) {
+             SDL_Rect heartRect = { SCREEN_WIDTH - 110, 10, 100, 30 };
+             SDL_RenderCopy(renderer, currentHeart, nullptr, &heartRect);
+         }
+}
+
+
+
+
     SDL_RenderPresent(renderer);
+
+
 }
 
 void Game::handleEvents(float deltaTime) {
@@ -163,20 +189,22 @@ void Game::update(float deltaTime) {
         }
     }
     enemies.erase(remove_if(enemies.begin(),enemies.end(),[](EnemyTank &e) {return !e.active; }), enemies.end());
-    if(enemies.empty()){
-        running=false;
-    }
+
+    //if (enemies.empty()) {
+      // levelCompleted = true;
+    //}
+
     for(auto& enemy : enemies){
         for(auto& bullet : enemy.bullets){
             if(SDL_HasIntersection(&bullet.rect,&player.rect)){
                 bullet.active = false;
-                player.lives--;
-                if (player.lives > 0) {
+                lives--;
+                if (lives > 0) {
                     player = Player(TILE_SIZE, (MAP_HEIGHT - 2) * TILE_SIZE, renderer);
-                    player.lives--;
                 }
                 else {
                     running = false;
+
                 }
                 break;
             }
@@ -207,6 +235,7 @@ void Game::spawnEnemies() {
 void Game::run() {
    while (true) {
     MenuScreen menu(renderer);
+
     menu.init();
     bool isMenu = true;
     SDL_Event e;
@@ -258,17 +287,59 @@ void Game::run() {
     const int frameDelay = 16; // ~60 FPS
     Uint32 lastTime = SDL_GetTicks();
 
-    while (running) {
+    Win winScreen(renderer);       // thêm: màn hình Win
+    bool levelCompleted = false;
+    while (running && !levelCompleted) {
         Uint32 currentTime = SDL_GetTicks();
-        float deltaTime = (currentTime - lastTime) / 1000.0f; // gi�y
+        float deltaTime = (currentTime - lastTime) / 1000.0f; // giây
         lastTime = currentTime;
 
         handleEvents(deltaTime);
         update(deltaTime);
         render();
+        if (enemies.empty()) {
+            levelCompleted = true;  // đánh dấu level hoàn thành
+            running = false;        // dừng vòng loop main level
+        }
         Uint32 frameTime = SDL_GetTicks() - currentTime;
         if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
     }
+
+    if (levelCompleted) {
+    winScreen.init();           // load hình và nút
+    bool showWin = true;
+    SDL_Event e;
+
+    while (showWin) {
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                showWin = false;
+                return;
+            }
+            winScreen.handleEvent(&e);
+        }
+
+        std::string click = winScreen.getClick();
+        if (click == "Menu") {
+            showWin = false;
+            // trở về menu
+        }
+        else if (click == "Levels") {
+            showWin = false;
+            // mở màn hình chọn level
+        }
+        else if (click == "Quit") {
+            showWin = false;
+            running = false;
+            return;
+        }
+
+        winScreen.render();
+        SDL_Delay(16);
+    }
+    winScreen.cleanup();
+}
+
    }
 }
 

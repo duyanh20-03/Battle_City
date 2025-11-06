@@ -14,7 +14,7 @@ public:
     SDL_Rect rect;
     SDL_Texture* imagePlayer1;
     std::vector<Bullet> bullets;
-    int lives = 3;
+
 
     Player();
     Player(int startX, int startY, SDL_Renderer* renderer);
