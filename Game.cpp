@@ -1,6 +1,8 @@
 #include<SDL.h>
+#include<SDL_ttf.h>
 #include "Game.h"
 #include "Constant.h"
+#include "Map.h"
 
 Game::Game() {
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -11,6 +13,12 @@ Game::Game() {
 
     if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
         std::cerr << "IMG_Init failed: " << IMG_GetError() << "\n";
+        running = false;
+        return;
+    }
+
+    if (TTF_Init() == -1) {
+        std::cerr << "TTF_Init failed: " << TTF_GetError() << "\n";
         running = false;
         return;
     }
@@ -34,9 +42,10 @@ Game::Game() {
     }
 
     running = true;
-    generateWalls();
-    spawnEnemies();
-    player = Player( TILE_SIZE, (MAP_HEIGHT - 2) * TILE_SIZE,renderer);
+    player.init(renderer);
+    //generateWalls();
+    //spawnEnemies();
+    //player = Player( TILE_SIZE, (MAP_HEIGHT - 2) * TILE_SIZE,renderer);
 
 }
 
@@ -73,7 +82,7 @@ void Game::render() {
     SDL_RenderPresent(renderer);
 }
 
-void Game::handleEvents() {
+void Game::handleEvents(float deltaTime) {
     SDL_Event event;
     double angle = 0.0;
     while (SDL_PollEvent(&event)) {
@@ -90,23 +99,24 @@ void Game::handleEvents() {
     }
 
             const Uint8* keystate = SDL_GetKeyboardState(NULL);
+            float speed = 200.0f;
             if (keystate[SDL_SCANCODE_UP]) {
-                player.move(0, -5, walls);
+                player.move(0, -speed, deltaTime, walls);
                 player.dirX = 0;
                 player.dirY = -1;
             }
             if (keystate[SDL_SCANCODE_DOWN]) {
-                player.move(0, 5, walls);
+                player.move(0, speed, deltaTime, walls);
                 player.dirX = 0;
                 player.dirY = 1;
             }
             if (keystate[SDL_SCANCODE_RIGHT]) {
-                player.move(5, 0, walls);
+                player.move(speed, 0, deltaTime, walls);
                 player.dirX = 1;
                 player.dirY = 0;
             }
             if (keystate[SDL_SCANCODE_LEFT]) {
-                player.move(-5, 0, walls);
+                player.move(-speed, 0, deltaTime, walls);
                 player.dirX = -1;
                 player.dirY = 0;
             }
@@ -114,7 +124,7 @@ void Game::handleEvents() {
         }
 
 
-void Game::update() {
+void Game::update(float deltaTime) {
     player.updateBullets();
     for (auto& bullet : player.bullets) {
         for (auto& wall : walls) {
@@ -126,7 +136,7 @@ void Game::update() {
         }
     }
     for(auto& enemy : enemies){
-        enemy.move(walls);
+        enemy.move(deltaTime, walls);
         enemy.updateBullet();
         if(rand() % 100 <2){
             enemy.shoot();
@@ -159,8 +169,16 @@ void Game::update() {
     for(auto& enemy : enemies){
         for(auto& bullet : enemy.bullets){
             if(SDL_HasIntersection(&bullet.rect,&player.rect)){
-                running = false;
-                return;
+                bullet.active = false;
+                player.lives--;
+                if (player.lives > 0) {
+                    player = Player(TILE_SIZE, (MAP_HEIGHT - 2) * TILE_SIZE, renderer);
+                    player.lives--;
+                }
+                else {
+                    running = false;
+                }
+                break;
             }
         }
     }
@@ -182,33 +200,82 @@ void Game::spawnEnemies() {
                 }
             }
         }
-        enemies.push_back(EnemyTank(ex,ey));
+        enemies.push_back(EnemyTank(ex, ey, renderer));
     }
 }
 
-Uint32 frameStart;
 void Game::run() {
+   while (true) {
+    MenuScreen menu(renderer);
+    menu.init();
+    bool isMenu = true;
     SDL_Event e;
-    while (running) {
 
-
-         handleEvents();
-         update();
-        render();
-
-        int frameTime;
-        frameStart = SDL_GetTicks();
-        frameTime = SDL_GetTicks() - frameStart;
-        if (frameDelay > frameTime) {
-            SDL_Delay(frameDelay - frameTime);
+    while (isMenu) {
+        while (SDL_PollEvent(&e)) {
+            if (e.type == SDL_QUIT) {
+                running = false;
+                return;
+            }
+            menu.handleEvent(&e);
         }
-        SDL_Delay(16); // ~60fps
+
+        std::string click = menu.getClick();
+        if (click == "Play") {
+            isMenu = false;
+        }
+        else if (click == "Levels") {
+            menu.initLevels();
+        }
+        else if (click == "Level 1") {
+            std::cout << "Starting Level 1!\n";
+            isMenu = false; // load map level 1
+        }
+        else if (click == "Level 2") {
+            std::cout << "Starting Level 2!\n";
+            currentLevel = 2;
+            isMenu = false;
+        }
+        else if (click == "Level 3") {
+            std::cout << "Starting Level 3!\n";
+            currentLevel = 3;
+            isMenu = false;
+        }
+        else if (click == "Back") {
+            menu.SetInLevelSelect(false);
+        }
+        else if (click == "Quit") {
+            running = false;
+            return;
+        }
+        menu.render();
+        SDL_Delay(16);
     }
+    menu.cleanup();
+    Map::generateLevel(currentLevel, walls, enemies, enemyNumber, renderer);
+    player = Player( TILE_SIZE, (MAP_HEIGHT - 2) * TILE_SIZE,renderer);
+
+    const int frameDelay = 16; // ~60 FPS
+    Uint32 lastTime = SDL_GetTicks();
+
+    while (running) {
+        Uint32 currentTime = SDL_GetTicks();
+        float deltaTime = (currentTime - lastTime) / 1000.0f; // giây
+        lastTime = currentTime;
+
+        handleEvents(deltaTime);
+        update(deltaTime);
+        render();
+        Uint32 frameTime = SDL_GetTicks() - currentTime;
+        if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
+    }
+   }
 }
 
 Game::~Game() {
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     IMG_Quit();
+    TTF_Quit();
     SDL_Quit();
 }

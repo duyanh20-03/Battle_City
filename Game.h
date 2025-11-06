@@ -10,6 +10,7 @@
 #include "Player.h"
 #include "Bullet.h"
 #include "EnemyTank.h"
+#include "MenuScreen.h"
 
 class Game {
     private:
@@ -19,6 +20,7 @@ class Game {
     std::vector<Wall> walls;
     Player player;
     int enemyNumber = 10;
+    int currentLevel = 1;
     std::vector<EnemyTank> enemies;
 
     public:
@@ -27,8 +29,8 @@ class Game {
 
     void run();
     void render();
-    void handleEvents();
-    void update();
+    void handleEvents(float deltaTime);
+    void update(float deltaTime);
     void generateWalls();
     void spawnEnemies();
     bool isRunning() const { return running; }

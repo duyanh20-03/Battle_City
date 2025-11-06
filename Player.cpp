@@ -11,6 +11,7 @@ Player::Player() {
     rect = {x, y, TILE_SIZE - 10, TILE_SIZE - 10};
     dirX = 0;
     dirY = -1;
+    imagePlayer1 = nullptr;
 }
 
 Player::Player(int startX, int startY,SDL_Renderer* renderer) {
@@ -19,11 +20,28 @@ Player::Player(int startX, int startY,SDL_Renderer* renderer) {
     rect = {x, y, TILE_SIZE - 10, TILE_SIZE - 10};
     dirX = 0;
     dirY = -1;
+    imagePlayer1 = nullptr;
+    init(renderer);
 }
 
-void Player::move(int dx, int dy, const std::vector<Wall>& walls) {
-    int newX = x + dx;
-    int newY = y + dy;
+void Player::init(SDL_Renderer* renderer) {
+    if (imagePlayer1 == nullptr) {
+        imagePlayer1 = IMG_LoadTexture(renderer, "PlayerTank.png");
+    }
+}
+
+//void Player::cleanup() {
+  //  if (imagePlayer1 != nullptr) {
+    //    SDL_DestroyTexture(imagePlayer1);
+      //  imagePlayer1 = nullptr;
+    //}
+//}
+
+void Player::move(int dx, int dy, float deltaTime, const std::vector<Wall>& walls) {
+    int moveX = static_cast<int>(dx * deltaTime);
+    int moveY = static_cast<int>(dy * deltaTime);
+    int newX = x + moveX;
+    int newY = y + moveY;
     this->dirX = dx;
     this->dirY = dy;
     SDL_Rect newRect={newX,newY,TILE_SIZE-10,TILE_SIZE-10};
@@ -49,9 +67,7 @@ void Player::render(SDL_Renderer* renderer){
     else if (dirX == -1 && dirY == 0) angle = 270.0;
     else if (dirX == 1 && dirY == 0) angle = 90.0;
 
-    imagePlayer1 = IMG_LoadTexture(renderer, "PlayerTank.png");
     SDL_RenderCopyEx(renderer, imagePlayer1, nullptr, &rect, angle, nullptr, SDL_FLIP_NONE);
-
     for (auto &bullet : bullets) {
         bullet.render(renderer);
     }
@@ -74,7 +90,5 @@ void Player::updateBullets() {
 }
 
 Player::~Player() {
-    if (imagePlayer1) {
-        SDL_DestroyTexture(imagePlayer1);
-    }
+    //cleanup();
 }

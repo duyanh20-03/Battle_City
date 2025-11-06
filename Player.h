@@ -14,10 +14,13 @@ public:
     SDL_Rect rect;
     SDL_Texture* imagePlayer1;
     std::vector<Bullet> bullets;
+    int lives = 3;
 
     Player();
     Player(int startX, int startY, SDL_Renderer* renderer);
-    void move(int dx, int dy, const std::vector<Wall>& walls);
+    void init(SDL_Renderer* renderer);
+    //void cleanup();
+    void move(int dx, int dy, float deltaTime, const std::vector<Wall>& walls);
     void render(SDL_Renderer* renderer);
     void shoot();
     void updateBullets();
