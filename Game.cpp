@@ -190,9 +190,6 @@ void Game::update(float deltaTime) {
     }
     enemies.erase(remove_if(enemies.begin(),enemies.end(),[](EnemyTank &e) {return !e.active; }), enemies.end());
 
-    //if (enemies.empty()) {
-      // levelCompleted = true;
-    //}
 
     for(auto& enemy : enemies){
         for(auto& bullet : enemy.bullets){
@@ -251,7 +248,9 @@ void Game::run() {
 
         std::string click = menu.getClick();
         if (click == "Play") {
+            currentLevel = 1;
             isMenu = false;
+            running = true;
         }
         else if (click == "Levels") {
             menu.initLevels();
@@ -259,16 +258,37 @@ void Game::run() {
         else if (click == "Level 1") {
             std::cout << "Starting Level 1!\n";
             isMenu = false; // load map level 1
+            running = true;
         }
         else if (click == "Level 2") {
             std::cout << "Starting Level 2!\n";
             currentLevel = 2;
             isMenu = false;
+            running = true;
         }
         else if (click == "Level 3") {
             std::cout << "Starting Level 3!\n";
             currentLevel = 3;
             isMenu = false;
+            running = true;
+        }
+        else if (click == "Level 4") {
+            std::cout << "Starting Level 4!\n";
+            currentLevel = 4;
+            isMenu = false;
+            running = true;
+        }
+        else if (click == "Level 5") {
+            std::cout << "Starting Level 5!\n";
+            currentLevel = 5;
+            isMenu = false;
+            running = true;
+        }
+        else if (click == "Level 6") {
+            std::cout << "Starting Level 6!\n";
+            currentLevel = 6;
+            isMenu = false;
+            running = true;
         }
         else if (click == "Back") {
             menu.SetInLevelSelect(false);
@@ -326,6 +346,8 @@ void Game::run() {
         }
         else if (click == "Levels") {
             showWin = false;
+            menu.initLevels();
+
             // mở màn hình chọn level
         }
         else if (click == "Quit") {

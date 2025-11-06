@@ -39,15 +39,31 @@ void MenuScreen::initLevels() {
 
     int buttonWidth = 200;
     int buttonHeight = 50;
-    int spacing = 20;
-    int startY = (SCREEN_HEIGHT - (4 * buttonHeight + 3 * spacing)) / 2 + 110;
-    int centerX = (SCREEN_WIDTH - buttonWidth) / 2;
+    int spacingX = 60; // khoảng cách giữa 2 cột
+    int spacingY = 20; // khoảng cách giữa các hàng
 
-    levelButtons.push_back(Button(centerX, startY, buttonWidth, buttonHeight, "Level 1"));
-    levelButtons.push_back(Button(centerX, startY + buttonHeight + spacing, buttonWidth, buttonHeight, "Level 2"));
-    levelButtons.push_back(Button(centerX, startY + 2 * (buttonHeight + spacing), buttonWidth, buttonHeight, "Level 3"));
-    levelButtons.push_back(Button(centerX, startY + 3 * (buttonHeight + spacing), buttonWidth, buttonHeight, "Back"));
+    // Tính vị trí căn giữa 2 cột
+    int totalWidth = buttonWidth * 2 + spacingX;
+    int startX = (SCREEN_WIDTH - totalWidth) / 2;
+    int startY = (SCREEN_HEIGHT - (3 * buttonHeight + 2 * spacingY)) / 2 + 60;
+
+    // 2 cột x 3 hàng cho 6 level
+    // Cột trái
+    levelButtons.push_back(Button(startX, startY, buttonWidth, buttonHeight, "Level 1"));
+    levelButtons.push_back(Button(startX, startY + (buttonHeight + spacingY), buttonWidth, buttonHeight, "Level 3"));
+    levelButtons.push_back(Button(startX, startY + 2 * (buttonHeight + spacingY), buttonWidth, buttonHeight, "Level 5"));
+
+    // Cột phải
+    levelButtons.push_back(Button(startX + buttonWidth + spacingX, startY, buttonWidth, buttonHeight, "Level 2"));
+    levelButtons.push_back(Button(startX + buttonWidth + spacingX, startY + (buttonHeight + spacingY), buttonWidth, buttonHeight, "Level 4"));
+    levelButtons.push_back(Button(startX + buttonWidth + spacingX, startY + 2 * (buttonHeight + spacingY), buttonWidth, buttonHeight, "Level 6"));
+
+    // Nút Back (ở giữa, bên dưới)
+    int backX = (SCREEN_WIDTH - buttonWidth) / 2;
+    int backY = startY + 3 * (buttonHeight + spacingY) + 20;
+    levelButtons.push_back(Button(backX, backY, buttonWidth, buttonHeight, "Back"));
 }
+
 
 void MenuScreen::cleanup() {
     if (backgroundTexture) {
