@@ -159,7 +159,7 @@ void Game::update(float deltaTime) {
                 wall.active = false;
                 bullet.active = false;
                 explosions.push_back(Explode(wall.x, wall.y, explodeTexture));
-                soundManager.playShoot();
+                soundManager.playExplosion();
                 break;
             }
         }
@@ -178,7 +178,7 @@ void Game::update(float deltaTime) {
                     wall.active = false;
                     bullet.active = false;
                     explosions.push_back(Explode(wall.x, wall.y, explodeTexture));
-                    soundManager.playShoot();
+                    soundManager.playExplosion();
                     break;
                 }
             }
@@ -190,7 +190,7 @@ void Game::update(float deltaTime) {
                     enemy.active = false;
                     bullet.active = false;
                     explosions.push_back(Explode(enemy.x, enemy.y, explodeTexture));
-                    soundManager.playShoot();
+                    soundManager.playExplosion();
                     break;
             }
         }
@@ -209,7 +209,7 @@ void Game::update(float deltaTime) {
                 bullet.active = false;
                 lives--;
                 explosions.push_back(Explode(player.x, player.y, explodeTexture));
-                soundManager.playShoot();
+                soundManager.playExplosion();
                 if (lives > 0) {
                     player = Player(TILE_SIZE, (MAP_HEIGHT - 2) * TILE_SIZE, renderer);
                 }
@@ -326,7 +326,6 @@ void Game::run() {
 
             levelCompleted = true;  // đánh dấu level hoàn thành
             //running = false;      // dừng vòng loop main level
-            soundManager.playWinSound();
         }
         Uint32 frameTime = SDL_GetTicks() - currentTime;
         if (frameTime < frameDelay) SDL_Delay(frameDelay - frameTime);
@@ -334,7 +333,8 @@ void Game::run() {
 
     if (levelCompleted) {
     SDL_Delay(1500);
-    winScreen.init();         // load hình và nút
+    winScreen.init();
+    soundManager.playWinSound();         // load hình và nút
     std::cout << "WinSound";
     bool showWin = true;
     SDL_Event e;

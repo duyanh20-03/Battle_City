@@ -18,7 +18,7 @@ void SoundManager::init() {
     explodeSound = Mix_LoadWAV("explodeSound.wav");
     shootSound = Mix_LoadWAV("shootSound.wav");
     backgroundSound = Mix_LoadWAV("bgSound.wav");
-    winSound = Mix_LoadWAV("winSound");
+    winSound = Mix_LoadWAV("winSound.wav");
 }
 
 void SoundManager::playExplosion() {
