@@ -13,11 +13,11 @@ void Map::generateLevel(int level, std::vector<Wall>& walls, std::vector<EnemyTa
             for (int i = 3; i < MAP_HEIGHT - 3; i += 3) {
                 for (int j = 3; j < MAP_WIDTH - 3; j += 3) {
                     walls.emplace_back(j * TILE_SIZE, i * TILE_SIZE);
+                    }
                 }
-            }
-            enemyNumber = 3;
-            break;
 
+            enemyNumber = 0;
+            break;
         // --- Level 2: dày hơn, nhiều tường hơn ---
         case 2:
             for (int i = 2; i < MAP_HEIGHT - 2; i += 2) {
@@ -64,30 +64,27 @@ void Map::generateLevel(int level, std::vector<Wall>& walls, std::vector<EnemyTa
             break;
 
         // --- Level 6: đối xứng, nhiều vật cản nhỏ (hard mode) ---
-        case 6:
-            for (int i = 1; i < MAP_HEIGHT - 1; i++) {
-                for (int j = 1; j < MAP_WIDTH - 1; j++) {
-                    if ((i % 2 == 0 && j % 2 == 0) && (i > 2 && i < MAP_HEIGHT - 3)) {
-                        walls.emplace_back(j * TILE_SIZE, i * TILE_SIZE);
-                    }
-                    // tạo đối xứng ngang
-                    if (i % 3 == 0 && j % 3 == 0 && j < MAP_WIDTH / 2) {
-                        walls.emplace_back((MAP_WIDTH - j) * TILE_SIZE, i * TILE_SIZE);
-                    }
-                }
-            }
-            enemyNumber = 12;
-            break;
-
-        // --- Mặc định ---
-        default:
-            for (int i = 3; i < MAP_HEIGHT - 3; i += 2) {
-                for (int j = 3; j < MAP_WIDTH - 3; j += 2) {
+        case 6: // Level 7: siêu dày, có lối đi, bỏ viền
+{
+    for (int i = 1; i < MAP_HEIGHT - 1; i++) {
+        for (int j = 1; j < MAP_WIDTH - 1; j++) {
+            // Tạo lối đi kiểu chéo: bỏ trống khi (i+j) % 3 == 0
+            if ((i + j) % 3 != 0) {
+                // Không đặt tường ở vị trí spawn player (1,1) và enemy (MAP_WIDTH-2, MAP_HEIGHT-2)
+                if (!((i == 1 && j == 1) ||
+                      (i == 1 && j == 2) ||
+                      (i == 2 && j == 1) ||
+                      (i == MAP_HEIGHT - 2 && j == MAP_WIDTH - 2))) {
                     walls.emplace_back(j * TILE_SIZE, i * TILE_SIZE);
                 }
             }
-            enemyNumber = 4;
-            break;
+        }
+    }
+
+    enemyNumber = 8; // số lượng enemy
+}
+break;
+
     }
 
     // --- Spawn enemy ---

@@ -1,7 +1,8 @@
 # depslib dependency file v1.0
-1762415245 source:c:\users\admin\onedrive\battle_city\game.cpp
+1762982464 source:c:\users\admin\onedrive\battle_city\game.cpp
 	<SDL.h>
 	<SDL_ttf.h>
+	<SDL_mixer.h>
 	"Game.h"
 	"Constant.h"
 	"Map.h"
@@ -16,7 +17,7 @@
 	"Constant.h"
 	<algorithm>
 
-1762405256 c:\users\admin\onedrive\battle_city\game.h
+1762979759 c:\users\admin\onedrive\battle_city\game.h
 	<SDL.h>
 	<SDL_image.h>
 	<iostream>
@@ -28,6 +29,8 @@
 	"EnemyTank.h"
 	"MenuScreen.h"
 	"Win.h"
+	"Explode.h"
+	"SoundManager.h"
 
 1760468682 c:\users\admin\onedrive\battle_city\constant.h
 
@@ -42,7 +45,7 @@
 	<string>
 	<iostream>
 
-1760384167 source:c:\users\admin\onedrive\battle_city\wall.cpp
+1762976993 source:c:\users\admin\onedrive\battle_city\wall.cpp
 	"Wall.h"
 	"Constant.h"
 	<SDL_image.h>
@@ -52,7 +55,7 @@
 	<iostream>
 	<vector>
 
-1760384154 c:\users\admin\onedrive\battle_city\wall.h
+1762976993 c:\users\admin\onedrive\battle_city\wall.h
 	<SDL.h>
 	<iostream>
 	<vector>
@@ -82,7 +85,8 @@
 	"Bullet.h"
 	"Wall.h"
 
-1762394840 source:c:\users\admin\onedrive\battle_city\enemytank.cpp
+1762973600 source:c:\users\admin\onedrive\battle_city\enemytank.cpp
+	<SDL_image.h>
 	"EnemyTank.h"
 	"Bullet.h"
 	"Constant.h"
@@ -119,7 +123,7 @@
 
 1762385333 source:c:\users\admin\onedrive\battle_city\levelsscreen.cpp
 
-1762414856 source:c:\users\admin\onedrive\battle_city\map.cpp
+1762981596 source:c:\users\admin\onedrive\battle_city\map.cpp
 	"Map.h"
 	<cstdlib>
 	<ctime>
@@ -140,4 +144,21 @@
 1762405147 source:c:\users\admin\onedrive\battle_city\win.cpp
 	"Win.h"
 	"Constant.h"
+
+1762977947 c:\users\admin\onedrive\battle_city\explode.h
+	<SDL.h>
+	<SDL_image.h>
+	<iostream>
+	"Constant.h"
+
+1762977947 source:c:\users\admin\onedrive\battle_city\explode.cpp
+	"Explode.h"
+
+1762980596 c:\users\admin\onedrive\battle_city\soundmanager.h
+	<SDL_mixer.h>
+	<iostream>
+	<string>
+
+1762980769 source:c:\users\admin\onedrive\battle_city\soundmanager.cpp
+	"SoundManager.h"
 

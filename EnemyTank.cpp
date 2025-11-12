@@ -1,3 +1,4 @@
+#include<SDL_image.h>
 #include "EnemyTank.h"
 #include "Bullet.h"
 #include "Constant.h"
@@ -5,14 +6,14 @@
 #include <algorithm>
 
 EnemyTank::EnemyTank(int startX, int startY, SDL_Renderer* renderer) {
-        moveDelay=15;
-        shootDelay=5;
-        x=startX;
-        y=startY;
-        rect={x, y, TILE_SIZE - 10, TILE_SIZE - 10};
-        dirX=0;
-        dirY=1;
-        active=true;
+        moveDelay = 15;
+        shootDelay = 5;
+        x = startX;
+        y = startY;
+        rect = {x, y, TILE_SIZE - 10, TILE_SIZE - 10};
+        dirX = 0;
+        dirY = 1;
+        active = true;
         imageEnemy = nullptr;
         init(renderer);
 }
@@ -55,7 +56,7 @@ void EnemyTank::move(float deltaTime, const std::vector<Wall> walls) {
 
 void EnemyTank::shoot() {
     if (--shootDelay > 0) return;
-    shootDelay = 3;
+    shootDelay = 1;
     bullets.push_back(Bullet(x+TILE_SIZE/2 + 5, y+TILE_SIZE/2 + 5, this->dirX * 6, this->dirY * 6 ));
 }
 void EnemyTank::updateBullet() {

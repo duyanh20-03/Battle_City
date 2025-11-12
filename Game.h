@@ -12,14 +12,20 @@
 #include "EnemyTank.h"
 #include "MenuScreen.h"
 #include "Win.h"
+#include "Explode.h"
+#include "SoundManager.h"
 
 class Game {
     private:
+    SoundManager soundManager;
     SDL_Window* window;
     SDL_Renderer* renderer;
     SDL_Texture* hearts[3];
+    SDL_Texture* explodeTexture = nullptr;
+    //Mix_Music* menuMusic = nullptr;
     bool running;
     std::vector<Wall> walls;
+    std::vector<Explode> explosions;
     Player player;
     int enemyNumber = 10;
     int currentLevel = 1;
