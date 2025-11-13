@@ -115,6 +115,7 @@ void Game::handleEvents(float deltaTime) {
             if (event.key.keysym.sym == SDLK_RETURN || event.key.keysym.sym == SDLK_KP_ENTER) {
                 std::cout << "ENTER DETECTED!\n";
                 player.shoot();
+                soundManager.playShoot();
             }
         }
     }
@@ -138,6 +139,39 @@ void Game::handleEvents(float deltaTime) {
     if (keystate[SDL_SCANCODE_LEFT]) {
         player.move(-speed, 0, deltaTime, walls);
         player.dirX = -1; player.dirY = 0;
+    }
+
+    //Pause;
+    if (keystate[SDL_SCANCODE_ESCAPE]) {
+        pauseScreen ps(renderer);
+        ps.init();
+         bool isPause = true;
+         SDL_Event e;
+         while (isPause) {
+            while (SDL_PollEvent(&e)) {
+                if (e.type == SDL_QUIT) {
+                    running = false;
+                    return;
+                }
+                ps.handleEvent(&e);
+            }
+
+            std::string click = ps.getClick();
+            if (click == "Resume") {
+                isPause = false;
+            }
+            else if (click == "Menu") {
+                running = false;
+                return;
+            }
+            else if (click == "Quit") {
+                running = false;
+                exit(0);
+            }
+            ps.render();
+
+         }
+         ps.cleanup();
     }
 }
 

@@ -12,6 +12,7 @@
 #include "EnemyTank.h"
 #include "MenuScreen.h"
 #include "Win.h"
+#include "pauseScreen.h"
 #include "Explode.h"
 #include "SoundManager.h"
 
